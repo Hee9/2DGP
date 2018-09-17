@@ -4,6 +4,19 @@ grass = load_image('grass.png')
 character = load_image('animation_sheet.png')
 
 def move_to_point_203_535():
+    x = 0
+    y = 90
+    frame = 0
+    while (x < 204):
+        clear_canvas()
+        grass.draw(400, 30)
+        character.clip_draw(frame * 100, 100, 100, 100, x, y)
+        update_canvas()
+        frame = (frame + 1) % 8
+        x += 5
+        y += 5
+        delay(0.05)
+        get_events()
     pass
 def move_to_point_132_243():
     pass
