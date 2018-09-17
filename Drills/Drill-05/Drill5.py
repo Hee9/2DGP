@@ -281,6 +281,5 @@ while True:
     move_to_point_682_336()
     move_to_point_712_348()
 
-
 close_canvas()
 
