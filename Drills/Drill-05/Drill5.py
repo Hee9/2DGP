@@ -146,8 +146,22 @@ def move_to_point_316_225():
         x -= 5
         delay(0.05)
         get_events()
+
+    x = 316
+    y = 136
+    frame = 0
+    while (y < 225):
+        clear_canvas()
+        grass.draw(400, 30)
+        character.clip_draw(frame * 100, 0, 100, 100, x, y)
+        update_canvas()
+        frame = (frame + 1) % 8
+        y += 5
+        delay(0.05)
+        get_events()
     pass
 def move_to_point_510_92():
+
     pass
 def move_to_point_692_518():
     pass
