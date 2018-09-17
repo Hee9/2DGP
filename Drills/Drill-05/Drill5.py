@@ -56,6 +56,30 @@ def move_to_point_132_243():
         get_events()
     pass
 def move_to_point_535_470():
+    x = 132
+    y = 242
+    frame = 0
+    while (x < 536):
+        clear_canvas()
+        grass.draw(400, 30)
+        character.clip_draw(frame * 100, 100, 100, 100, x, y)
+        update_canvas()
+        frame = (frame + 1) % 8
+        x += 5
+        delay(0.05)
+        get_events()
+
+    x = 535
+    y = 242
+    while (y < 471):
+        clear_canvas()
+        grass.draw(400, 30)
+        character.clip_draw(frame * 100, 100, 100, 100, x, y)
+        update_canvas()
+        frame = (frame + 1) % 8
+        y += 5
+        delay(0.05)
+        get_events()
     pass
 def move_to_point_477_203():
     pass
@@ -75,7 +99,7 @@ def move_to_point_712_348():
 
 while True:
     #move_to_point_203_535()
-    move_to_point_132_243()
+    #move_to_point_132_243()
     move_to_point_535_470()
     move_to_point_477_203()
     move_to_point_715_136()
