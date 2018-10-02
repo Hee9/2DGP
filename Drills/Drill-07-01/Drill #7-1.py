@@ -3,7 +3,7 @@ import random
 
 KPU_WIDTH, KPU_HEIGHT = 1280, 1024
 
-points = [(random.randint(0,1280),random.randint(0,1024)) for i in range(5)]
+points = [(random.randint(0,1280),random.randint(0,1024)) for i in range(20)]
 
 def handle_events():
     global running
@@ -55,7 +55,7 @@ while True:
 
     draw_line(points[n-1],points[n])
 
-    n = (n+1)%5
+    n = (n+1)%20
 
     delay(0.05)
 
