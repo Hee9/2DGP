@@ -16,7 +16,7 @@ def draw_point(p):
 
     if points[n-1][0] > points[n][0]:
         character.clip_draw(frame*100,0,100,100,p[0],p[1])
-    #else:
+    else:
         character.clip_draw(frame * 100, 100, 100, 100, p[0], p[1])
 
     frame = (frame+1) % 8
