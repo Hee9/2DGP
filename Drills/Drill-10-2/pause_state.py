@@ -30,6 +30,8 @@ def handle_events():
 def draw():
     global frame
     clear_canvas()
+    main_state.grass.draw()
+    main_state.boy.draw()
     if (frame % 250 < 100):
         image.clip_draw(250, 250, 400, 400, 400, 300)
     update_canvas()
