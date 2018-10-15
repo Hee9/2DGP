@@ -37,7 +37,10 @@ class Boy:
             self.dir = 1
 
     def draw(self):
-        self.image.clip_draw(self.frame * 100, 0, 100, 100, self.x, self.y)
+        if self.dir == 1:
+            self.image.clip_draw(self.frame * 100, 0, 100, 100, self.x, self.y)
+        elif self.dir == -1:
+            self.image.clip_draw(self.frame * 100, 100, 100, 100, self.x, self.y)
 
 def enter():
     global boy, grass
