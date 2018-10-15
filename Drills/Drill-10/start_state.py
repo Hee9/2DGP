@@ -2,11 +2,9 @@ import game_framework
 import title_state
 from pico2d import *
 
-
 name = "StartState"
 image = None
 logo_time = 0.0
-
 
 def enter():
     global image
