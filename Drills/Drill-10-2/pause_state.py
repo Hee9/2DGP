@@ -4,6 +4,7 @@ from pico2d import *
 
 name = "pause_state"
 image = None
+frame = 0
 
 def enter():
     global image
@@ -14,6 +15,7 @@ def exit():
     del(image)
 
 def handle_events():
+    global frame
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -23,14 +25,18 @@ def handle_events():
                 game_framework.quit()
             elif (event.type, event.key) == (SDL_KEYDOWN, SDLK_p):
                 game_framework.pop_state()
+                frame = 0
 
 def draw():
+    global frame
     clear_canvas()
-    image.clip_draw(250, 250, 400, 400, 400, 300)
+    if (frame % 250 < 100):
+        image.clip_draw(250, 250, 400, 400, 400, 300)
     update_canvas()
 
 def update():
-    pass
+    global frame
+    frame = (frame + 1) % 250
 
 def pause():
     pass
