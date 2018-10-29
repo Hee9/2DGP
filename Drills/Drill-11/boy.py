@@ -126,8 +126,13 @@ class DashState:
     @staticmethod
     def do(boy):
         boy.frame = (boy.frame + 1) % 8
-        boy.x += boy.velocity
+        boy.timer -= 1
+        boy.x += boy.velocity * 10
         boy.x = clamp(25, boy.x, 1600 - 25)
+
+        if boy.timer == 0:
+            boy.add_event(LSHIFT_UP)
+            boy.add_event(RSHIFT_UP)
 
     @staticmethod
     def draw(boy):
@@ -159,7 +164,6 @@ class Boy:
         self.event_que = []
         self.cur_state = IdleState
         self.cur_state.enter(self, None)
-
 
     def fire_ball(self):
         ball = Ball(self.x, self.y, self.dir*3)
