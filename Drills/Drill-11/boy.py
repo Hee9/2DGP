@@ -4,20 +4,21 @@ from ball import Ball
 import game_world
 
 # Boy Event
-RIGHT_DOWN, LEFT_DOWN, RIGHT_UP, LEFT_UP, SLEEP_TIMER, SPACE = range(6)
+RIGHT_DOWN, LEFT_DOWN, RIGHT_UP, LEFT_UP, SPACE, LSHIFT, RSHIFT = range(7)
 
 key_event_table = {
     (SDL_KEYDOWN, SDLK_RIGHT): RIGHT_DOWN,
     (SDL_KEYDOWN, SDLK_LEFT): LEFT_DOWN,
     (SDL_KEYUP, SDLK_RIGHT): RIGHT_UP,
     (SDL_KEYUP, SDLK_LEFT): LEFT_UP,
-    (SDL_KEYDOWN, SDLK_SPACE): SPACE
+    (SDL_KEYDOWN, SDLK_SPACE): SPACE,
+    (SDL_KEYDOWN, SDLK_LSHIFT): LSHIFT,
+    (SDL_KEYDOWN, SDLK_RSHIFT): RSHIFT
 }
 
 # Boy States
 
 class IdleState:
-
     @staticmethod
     def enter(boy, event):
         if event == RIGHT_DOWN:
@@ -38,9 +39,6 @@ class IdleState:
     @staticmethod
     def do(boy):
         boy.frame = (boy.frame + 1) % 8
-        boy.timer -= 1
-        if boy.timer == 0:
-            boy.add_event(SLEEP_TIMER)
 
     @staticmethod
     def draw(boy):
@@ -49,9 +47,7 @@ class IdleState:
         else:
             boy.image.clip_draw(boy.frame * 100, 200, 100, 100, boy.x, boy.y)
 
-
 class RunState:
-
     @staticmethod
     def enter(boy, event):
         if event == RIGHT_DOWN:
@@ -83,7 +79,6 @@ class RunState:
         else:
             boy.image.clip_draw(boy.frame * 100, 0, 100, 100, boy.x, boy.y)
 
-
 class SleepState:
     @staticmethod
     def enter(boy, event):
@@ -106,14 +101,17 @@ class SleepState:
             boy.image.clip_composite_draw(boy.frame * 100, 200, 100, 100,
                                           -3.141592 / 2, '', boy.x + 25, boy.y - 25, 100, 100)
 
+
+
 next_state_table = {
     IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState, RIGHT_DOWN: RunState,
-                LEFT_DOWN: RunState, SLEEP_TIMER: SleepState, SPACE: IdleState},
-    RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState, SPACE: RunState},
-    SleepState: {LEFT_DOWN: RunState, RIGHT_DOWN: RunState, LEFT_UP: RunState, RIGHT_UP: RunState, SPACE: IdleState} }
+                LEFT_DOWN: RunState, SPACE: IdleState, LSHIFT: RunState, RSHIFT: RunState},
+    RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: IdleState,
+               RIGHT_DOWN: IdleState, SPACE: RunState, LSHIFT: RunState, RSHIFT: RunState},
+
+     }
 
 class Boy:
-
     def __init__(self):
         self.x, self.y = 1600 // 2, 90
         self.image = load_image('animation_sheet.png')
