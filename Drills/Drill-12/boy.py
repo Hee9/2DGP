@@ -3,6 +3,8 @@ from pico2d import *
 from ball import Ball
 
 import game_world
+import random
+import math
 
 # Boy Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30cm
@@ -10,6 +12,7 @@ RUN_SPEED_KMPH = 20.0  # km / hour
 RUN_SPEED_MPM = (RUN_SPEED_KMPH * 1000.0 / 60.0)
 RUN_SPEED_MPS = (RUN_SPEED_MPM / 60.0)
 RUN_SPEED_PPS = (RUN_SPEED_MPS * PIXEL_PER_METER)
+ROTATE_METER = 3 * PIXEL_PER_METER
 
 # Boy Action Speed
 TIME_PER_ACTION = 0.5
@@ -17,7 +20,7 @@ ACTION_PER_TIME = 1.0 / TIME_PER_ACTION
 FRAMES_PER_ACTION = 8
 
 # Boy Event
-RIGHT_DOWN, LEFT_DOWN, RIGHT_UP, LEFT_UP, SLEEP_TIMER, SPACE = range(6)
+RIGHT_DOWN, LEFT_DOWN, RIGHT_UP, LEFT_UP, SLEEP_TIMER, SPACE, GHOST = range(7)
 
 key_event_table = {
     (SDL_KEYDOWN, SDLK_RIGHT): RIGHT_DOWN,
@@ -79,7 +82,6 @@ class RunState:
         elif event == LEFT_UP:
             boy.velocity += RUN_SPEED_PPS
         boy.dir = clamp(-1, boy.velocity, 1)
-        pass
 
     @staticmethod
     def exit(boy, event):
@@ -103,7 +105,8 @@ class SleepState:
 
     @staticmethod
     def enter(boy, event):
-        boy.frame = 0
+        boy.current_time = get_time()
+        boy.timer = 0
 
     @staticmethod
     def exit(boy, event):
@@ -111,7 +114,10 @@ class SleepState:
 
     @staticmethod
     def do(boy):
+        boy.timer = get_time()
         boy.frame = (boy.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
+        if(boy.timer - boy.current_time >= 1):
+            boy.add_event(GHOST)
 
     @staticmethod
     def draw(boy):
@@ -120,10 +126,44 @@ class SleepState:
         else:
             boy.image.clip_composite_draw(int(boy.frame) * 100, 200, 100, 100, -3.141592 / 2, '', boy.x + 25, boy.y - 25, 100, 100)
 
+
+class GhostState:
+    @staticmethod
+    def enter(boy, event):
+        boy.timer = 0
+        boy.current_time = get_time()
+
+    @staticmethod
+    def exit(boy, event):
+        pass
+
+    @staticmethod
+    def do(boy):
+        boy.frame = (boy.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 8
+        boy.timer = get_time()
+        boy.Set_Opacify()
+
+    @staticmethod
+    def draw(boy):
+        if boy.dir == 1:
+            boy.image.clip_composite_draw(0, 300, 100, 100, 3.141592 / 2, '', boy.x - 25, boy.y - 25, 100, 100)
+        else:
+            boy.image.clip_composite_draw(0, 200, 100, 100, -3.141592 / 2, '', boy.x + 25, boy.y - 25, 100, 100)
+
+        if (boy.timer - boy.current_time < 5):
+            if boy.dir == 1:
+                boy.ghostimage.clip_composite_draw(0, 300, 100, 100, (3.141592 / 2) - (3.141592 / 2 * (boy.timer - boy.current_time) / 5), '',
+                                                   boy.x + 5 * (boy.timer - boy.current_time - 5), boy.y - 25 + (10 * (boy.timer - boy.current_time)), 100, 100)
+            else:
+                boy.ghostimage.clip_composite_draw(0, 200, 100, 100, (-3.141592 / 2) + (3.141592 / 2 * (boy.timer - boy.current_time) / 5), '',
+                                                   boy.x - 5 * (boy.timer - boy.current_time - 5), boy.y - 25 + (10 * (boy.timer - boy.current_time)), 100, 100)
+
+
 next_state_table = {
     IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState, SLEEP_TIMER: SleepState, SPACE: IdleState},
     RunState: {RIGHT_UP: IdleState, LEFT_UP: IdleState, LEFT_DOWN: IdleState, RIGHT_DOWN: IdleState, SPACE: RunState},
-    SleepState: {LEFT_DOWN: RunState, RIGHT_DOWN: RunState, LEFT_UP: RunState, RIGHT_UP: RunState, SPACE: IdleState}
+    SleepState: {LEFT_DOWN: RunState, RIGHT_DOWN: RunState, LEFT_UP: RunState, RIGHT_UP: RunState, SPACE: IdleState, GHOST: GhostState},
+    GhostState: {LEFT_DOWN: RunState, RIGHT_DOWN:RunState,LEFT_UP: RunState, RIGHT_UP: RunState, SPACE: IdleState}
 }
 
 class Boy:
@@ -131,6 +171,8 @@ class Boy:
         self.x, self.y = 1600 // 2, 90
         # Boy is only once created, so instance image loading is fine
         self.image = load_image('animation_sheet.png')
+        self.ghostimage = load_image('animation_sheet.png')
+        self.ghostimage.opacify(0.5)
         self.font = load_font('ENCR10B.TTF', 16)
         self.dir = 1
         self.velocity = 0
@@ -139,6 +181,9 @@ class Boy:
         self.cur_state = IdleState
         self.cur_state.enter(self, None)
         self.current_time = 0
+
+    def Set_Opacify(self):
+        self.ghostimage.opacify(random.randint(2, 7) / 10)
 
     def fire_ball(self):
         ball = Ball(self.x, self.y, self.dir*3)
@@ -163,4 +208,3 @@ class Boy:
         if (event.type, event.key) in key_event_table:
             key_event = key_event_table[(event.type, event.key)]
             self.add_event(key_event)
-
