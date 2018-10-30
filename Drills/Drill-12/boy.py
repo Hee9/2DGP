@@ -157,6 +157,11 @@ class GhostState:
             else:
                 boy.ghostimage.clip_composite_draw(0, 200, 100, 100, (-3.141592 / 2) + (3.141592 / 2 * (boy.timer - boy.current_time) / 5), '',
                                                    boy.x - 5 * (boy.timer - boy.current_time - 5), boy.y - 25 + (10 * (boy.timer - boy.current_time)), 100, 100)
+        elif (boy.timer - boy.current_time < 10):
+            if boy.dir == 1:
+                boy.ghostimage.clip_composite_draw(0, 300, 100, 100, 0, '', boy.x, boy.y + 25 + (10 * (boy.timer - boy.current_time - 5)), 100, 100)
+            else:
+                boy.ghostimage.clip_composite_draw(0, 200, 100, 100, 0, '', boy.x, boy.y + 25 + (10 * (boy.timer - boy.current_time - 5)), 100, 100)
 
 
 next_state_table = {
