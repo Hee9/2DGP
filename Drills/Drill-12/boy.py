@@ -162,7 +162,15 @@ class GhostState:
                 boy.ghostimage.clip_composite_draw(0, 300, 100, 100, 0, '', boy.x, boy.y + 25 + (10 * (boy.timer - boy.current_time - 5)), 100, 100)
             else:
                 boy.ghostimage.clip_composite_draw(0, 200, 100, 100, 0, '', boy.x, boy.y + 25 + (10 * (boy.timer - boy.current_time - 5)), 100, 100)
-
+        else:
+            if boy.dir == 1:
+                boy.ghostimage.clip_composite_draw(0, 300, 100, 100, 0, '', boy.x + ROTATE_METER * math.sin(math.radians(720 * (boy.timer - boy.current_time - 10))),
+                                                   boy.y + 75 + ROTATE_METER * math.cos(math.radians(720 * (boy.timer - boy.current_time - 10))), 100, 100)
+            else:
+                boy.ghostimage.clip_composite_draw(0, 200, 100, 100, 0, '', boy.x + ROTATE_METER * math.sin(math.radians(720 * (boy.timer - boy.current_time - 10))),
+                                                   boy.y + 75 + ROTATE_METER * math.cos(math.radians(720 * (boy.timer - boy.current_time - 10))), 100, 100)
+            if (boy.timer - boy.current_time > 19.5):
+                boy.current_time += 1.5
 
 next_state_table = {
     IdleState: {RIGHT_UP: RunState, LEFT_UP: RunState, RIGHT_DOWN: RunState, LEFT_DOWN: RunState, SLEEP_TIMER: SleepState, SPACE: IdleState},
