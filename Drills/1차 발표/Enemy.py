@@ -21,7 +21,7 @@ class RunState:
 
     @staticmethod
     def enter(enemy, event):
-        enemy.dir = clamp(-1, enemy.velocity, 1)
+        enemy.dir = clamp(-2, enemy.velocity, 2)
 
     @staticmethod
     def exit(enemy, event):
@@ -31,14 +31,39 @@ class RunState:
     def do(enemy):
         enemy.frame = (enemy.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
         enemy.x += enemy.velocity * game_framework.frame_time
-        enemy.x = clamp(25, enemy.x, 1600 - 25)
+        enemy.x = clamp(52, enemy.x, 1040 - 52)
+        enemy.y = clamp(52, enemy.y, 1040 - 52)
+        if enemy.dir == 0:
+            enemy.y -= 1
+            if enemy.y == 572 and enemy.x == 780:
+                enemy.dir = 1
+            if enemy.y == 260 and enemy.x == 988:
+                enemy.dir = 2
+        if enemy.dir == 1:
+            enemy.x += 1
+            if enemy.x == 988:
+                enemy.dir = 0
+        if enemy.dir == 2:
+            enemy.x -= 1
+            if enemy.x == 572:
+                enemy.dir = 3
+            if enemy.x == 264:
+                enemy.dir = 0
+        if enemy.dir == 3:
+            enemy.y += 1
+            if enemy.y == 780:
+                enemy.dir = 2
 
     @staticmethod
     def draw(enemy):
-        if enemy.dir == 1:
-            enemy.image.clip_draw(int(enemy.frame) * 66, 254, 66, 66, enemy.x, enemy.y)
-        else:
+        if enemy.dir == 0:
             enemy.image.clip_draw(int(enemy.frame) * 66, 198, 66, 66, enemy.x, enemy.y)
+        if enemy.dir == 1:
+            enemy.image.clip_draw(int(enemy.frame) * 66, 66, 66, 66, enemy.x, enemy.y)
+        if enemy.dir == 2:
+            enemy.image.clip_draw(int(enemy.frame) * 66, 00, 66, 66, enemy.x, enemy.y)
+        if enemy.dir == 3:
+            enemy.image.clip_draw(int(enemy.frame) * 66, 132, 66, 66, enemy.x, enemy.y)
 
 class Enemy:
 
