@@ -2,6 +2,7 @@ from pico2d import *
 
 import game_framework
 import game_world
+import random
 
 # Enemy Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30cm
@@ -32,25 +33,25 @@ class RunState:
         enemy.frame = (enemy.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 3
         enemy.x += enemy.velocity * game_framework.frame_time
         enemy.x = clamp(52, enemy.x, 1040 - 52)
-        enemy.y = clamp(52, enemy.y, 1040 - 52)
+        #enemy.y = clamp(52, enemy.y, 1040 - 52)
         if enemy.dir == 0:
-            enemy.y -= 1
+            enemy.y -= 0.5
             if enemy.y == 572 and enemy.x == 780:
                 enemy.dir = 1
             if enemy.y == 260 and enemy.x == 988:
                 enemy.dir = 2
         if enemy.dir == 1:
-            enemy.x += 1
+            enemy.x += 0.5
             if enemy.x == 988:
                 enemy.dir = 0
         if enemy.dir == 2:
-            enemy.x -= 1
+            enemy.x -= 0.5
             if enemy.x == 572:
                 enemy.dir = 3
             if enemy.x == 264:
                 enemy.dir = 0
         if enemy.dir == 3:
-            enemy.y += 1
+            enemy.y += 0.5
             if enemy.y == 780:
                 enemy.dir = 2
 
@@ -68,12 +69,12 @@ class RunState:
 class Enemy:
 
     def __init__(self):
-        self.x, self.y = 780, 988
+        self.x, self.y = 780, random.randint(988, 8000)
         # Enemy is only once created, so instance image loading is fine
         self.image = load_image('enemy.png')
         self.dir = 1
         self.velocity = 0
-        self.frame = 0
+        self.frame = random.randint(0, 10)
         self.event_que = []
         self.cur_state = RunState
         self.cur_state.enter(self, None)

@@ -10,14 +10,17 @@ name = "CAMP Stage"
 image = None
 tower = None
 enemy = None
+enemies = None
 
 def enter():
-    global image, tower, enemy
+    global image, tower, enemy, enemies
     image = load_image('camp.png')
     tower = Tower()
     enemy = Enemy()
+    enemies = [Enemy() for n in range(100)]
     game_world.add_object(tower, 0)
-    game_world.add_object(enemy, 1)
+    for enemy in enemies:
+        game_world.add_object(enemy, 1)
 
 def exit():
     global image
