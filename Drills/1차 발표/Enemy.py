@@ -69,7 +69,7 @@ class RunState:
 class Enemy:
 
     def __init__(self):
-        self.x, self.y = 780, random.randint(988, 8000)
+        self.x, self.y = 780, random.randint(988, random.randint(1500, random.randint(5000, 8000)))
         # Enemy is only once created, so instance image loading is fine
         self.image = load_image('enemy.png')
         self.dir = 1

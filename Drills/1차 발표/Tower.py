@@ -39,7 +39,6 @@ class IdleState:
     def do(tower):
         tower.frame = (tower.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 4
 
-
     @staticmethod
     def draw(tower):
         tower.image.clip_draw(int(tower.frame) * 70, 0, 70, 70, tower.x, tower.y)
