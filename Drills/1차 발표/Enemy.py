@@ -3,6 +3,7 @@ from pico2d import *
 import game_framework
 import game_world
 import random
+import camp_stage
 
 # Enemy Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30cm
@@ -69,7 +70,8 @@ class RunState:
 class Enemy:
 
     def __init__(self):
-        self.x, self.y = 780, random.randint(988, random.randint(1500, random.randint(5000, 8000)))
+        #self.x, self.y = 780, random.randint(988, random.randint(1500, random.randint(5000, 8000)))
+        self.x, self.y = 780, camp_stage.y
         # Enemy is only once created, so instance image loading is fine
         self.image = load_image('enemy.png')
         self.dir = 1
@@ -78,6 +80,7 @@ class Enemy:
         self.event_que = []
         self.cur_state = RunState
         self.cur_state.enter(self, None)
+        camp_stage.y += random.randint(40, 100)
 
     def add_event(self, event):
         self.event_que.insert(0, event)
@@ -94,4 +97,3 @@ class Enemy:
 
     def handle_event(self, event):
         pass
-
