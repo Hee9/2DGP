@@ -23,18 +23,19 @@ class IdleState:
 
     @staticmethod
     def exit(tower, event):
-        Bazzi_T.attack_ball()
+        BazziTower.attack_ball()
 
     @staticmethod
     def do(tower):
-        tower.frame = (tower.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 4
+        tower.frame = (tower.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 1
+
 
     @staticmethod
-    def draw(Bazzi_T):
-        for i in range(Bazzi_T.tower1):
-            Bazzi_T.image.clip_draw(int(Bazzi_T.frame) * 70, 0, 70, 70, Bazzi_T.Save_mouseX[i], Bazzi_T.Save_mouseY[i])
+    def draw(BazziTower):
+        for i in range(BazziTower.tower1):
+            BazziTower.image.clip_draw(int(BazziTower.frame) * 70, 0, 70, 70, BazziTower.Save_mouseX[i], BazziTower.Save_mouseY[i])
 
-class Bazzi_T:
+class BazziTower:
 
     def __init__(self):
         # Tower is only once created, so instance image loading is fine

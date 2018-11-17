@@ -41,7 +41,6 @@ def draw_big_point(p):
     turtle.dot(15)
     turtle.write('     '+str(p))
 
-
 def draw_point(p):
     turtle.goto(p)
     turtle.dot(5, random.random(), random.random(), random.random())

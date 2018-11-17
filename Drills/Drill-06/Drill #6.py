@@ -22,50 +22,54 @@ def handle_events():
     pass
 
 def character_move():
-    c_x = 100
-    c_y = 100
-    frame = 0
-    m_x, m_y = KPU_WIDTH // 2, KPU_HEIGHT // 2
 
-    while(c_x < m_x):
+
+
+
+    pass
+
+running = True
+c_x = 100
+c_y = 100
+frame = 0
+x, y = KPU_WIDTH // 2, KPU_HEIGHT // 2
+hide_cursor()
+
+while running:
+    clear_canvas()
+    kpu_ground.draw(KPU_WIDTH // 2, KPU_HEIGHT // 2)
+    character.clip_draw(frame * 100, 100 * 1, 100, 100, 100, 100)
+    mouse.draw(x + 20, y - 20)
+
+    update_canvas()
+    frame = (frame + 1) % 8
+
+    handle_events()
+
+    while (c_x < x):
         clear_canvas()
         kpu_ground.draw(KPU_WIDTH // 2, KPU_HEIGHT // 2)
         character.clip_draw(frame * 100, 100, 100, 100, c_x, c_y)
-        mouse.draw(m_x + 20, m_y - 20)
+        mouse.draw(x + 20, x - 20)
         update_canvas()
         frame = (frame + 1) % 8
         c_x += 5
         delay(0.05)
         get_events()
 
-    while(c_y < m_y):
+    while (c_y < y):
         clear_canvas()
         kpu_ground.draw(KPU_WIDTH // 2, KPU_HEIGHT // 2)
         character.clip_draw(frame * 100, 100, 100, 100, c_x, c_y)
-        mouse.draw(m_x + 20, m_y - 20)
+        mouse.draw(x + 20, y - 20)
         update_canvas()
         frame = (frame + 1) % 8
         c_y += 5
         delay(0.05)
         get_events()
 
-    pass
-
-running = True
-x, y = KPU_WIDTH // 2, KPU_HEIGHT // 2
-frame = 0
-hide_cursor()
-
-while running:
-    #character_move()
-    clear_canvas()
-    kpu_ground.draw(KPU_WIDTH // 2, KPU_HEIGHT // 2)
-    character.clip_draw(frame * 100, 100 * 1, 100, 100, x, y)
-    update_canvas()
-    frame = (frame + 1) % 8
 
     delay(0.02)
-    handle_events()
 
 
 close_canvas()

@@ -30,15 +30,15 @@ class IdleState:
         tower.frame = (tower.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 4
 
     @staticmethod
-    def draw(Uni_T):
-        for i in range(Uni_T.tower1):
-            Uni_T.image.clip_draw(int(Uni_T.frame) * 70, 0, 70, 70, Uni_T.Save_mouseX[i], Uni_T.Save_mouseY[i])
+    def draw(DaoTower):
+        for i in range(DaoTower.tower1):
+            DaoTower.image.clip_draw(int(DaoTower.frame) * 70, 0, 70, 70, DaoTower.Save_mouseX[i], DaoTower.Save_mouseY[i])
 
-class Uni_T:
+class DaoTower:
 
     def __init__(self):
         # Tower is only once created, so instance image loading is fine
-        self.image = load_image('Uni_tower.png')
+        self.image = load_image('Dao_tower.png')
         self.dir = 1
         self.velocity = 0
         self.frame = 0
