@@ -9,8 +9,11 @@ logo_time = 0.0
 mouseX, mouseY = 0, 0
 
 def enter():
-    global image
+    global image, bgm
     image = load_image('StartState.png')
+    bgm = load_music('StartState.ogg')
+    bgm.set_volume(64)
+    bgm.repeat_play()
 
 def exit():
     global image
@@ -34,7 +37,7 @@ def draw():
     update_canvas()
 
 def handle_events():
-    global mouseX, mouseY
+    global mouseX, mouseY, bgm
     events = get_events()
 
     for event in events:
@@ -48,6 +51,9 @@ def handle_events():
             elif event.type == SDL_MOUSEBUTTONDOWN:
                 print(mouseX, mouseY)
                 if event.x >= 560 and event.x <= 980 and 1024 - 1 - event.y >= 210 and 1024 - 1 - event.y <= 280:
+                    bgm = load_music('GameStart.ogg')
+                    bgm.set_volume(50)
+                    bgm.repeat_play()
                     game_framework.change_state(camp_stage)
 
 def pause():
