@@ -4,31 +4,38 @@ import game_framework
 import game_world
 
 from Tower_Bazzi import Bazzi
+from Tower_Dao import Dao
+from Tower_Uni import Uni
 from Enemy import Enemy
 
 NONE, BAZZI, DAO, UNI = range(4)
 name = "CAMP Stage"
 image = None
 bazzi_image = None
+dao_image = None
+uni_image = None
 enemy = None
 enemies = []
 Enemy_gap = 1030
 Enemy_timer = 0
+select_image = NONE
 
 def enter():
     global image, bgm
-    global bazzi_image
+    global bazzi_image, dao_image, uni_image
     image = load_image('camp.png')
-    bazzi_image = load_image('bazzi.png')
+    bazzi_image = load_image('Bazzi.png')
+    dao_image = load_image('Dao.png')
+    uni_image = load_image('uni.png')
     bgm = load_music('GameStart.ogg')
     bgm.set_volume(50)
     bgm.play()
 
-
 def exit():
     global image, bgm
-    global bazzi_image
-    del(image, bgm, bazzi_image)
+    global bazzi_image, dao_image, uni_image
+    del(image, bgm)
+    del(bazzi_image, dao_image, uni_image)
     game_world.clear()
 
 def update():
@@ -47,10 +54,12 @@ def update():
         Enemy_timer = 0
 
 def draw():
-    global image, bazzi_image
+    global image, bazzi_image, dao_image, uni_image
     clear_canvas()
     image.draw(520, 520)
     bazzi_image.draw(1124, 550)
+    dao_image.draw(1224, 550)
+    uni_image.draw(1324, 550)
 
     for game_object in game_world.all_objects():
         game_object.draw()
@@ -71,9 +80,8 @@ def collide(a, b):
 
     return True
 
-select = NONE
 def handle_events():
-    global select, bazzi_image
+    global select_image, bazzi_image, dao_image, uni_image
 
     events = get_events()
     for event in events:
@@ -82,19 +90,37 @@ def handle_events():
         elif event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
             game_framework.quit()
         elif event.type == SDL_MOUSEMOTION:
-            bazzi_image.draw(event.x,1024-1-event.y)
+            bazzi_image.draw(event.x, 1024-1-event.y)
         elif event.type == SDL_MOUSEBUTTONDOWN:
             # BazziTower
             if event.x <= 1150 and event.x >= 1096:
                 if 1024 - 1 - event.y <= 576 and 1024 - 1 - event.y >= 524:
-                    select = BAZZI
+                    select_image = BAZZI
+            # DaoTower
+            elif event.x <= 1250 and event.x >= 1196:
+                if 1024 - 1 - event.y <= 576 and 1024 - 1 - event.y >= 524:
+                    select_image = Dao
+            # UniTower
+            elif event.x <= 1350 and event.x >= 1296:
+                if 1024 - 1 - event.y <= 576 and 1024 - 1 - event.y >= 524:
+                    select_image = Uni
 
         elif event.type == SDL_MOUSEBUTTONUP:
             # BazziTower
-            if select == BAZZI:
-                bazzi = Bazzi(event.x,1024 - 1 - event.y)
-                game_world.add_object(bazzi,1)
-                select = NONE
+            if select_image == BAZZI:
+                bazzi = Bazzi(event.x, 1024 - 1 - event.y)
+                game_world.add_object(bazzi, 1)
+                select_image = NONE
+            # BazziTower
+            elif select_image == Dao:
+                dao = Dao(event.x, 1024 - 1 - event.y)
+                game_world.add_object(dao, 1)
+                select_image = NONE
+            # BazziTower
+            elif select_image == Uni:
+                uni = Uni(event.x, 1024 - 1 - event.y)
+                game_world.add_object(uni, 1)
+                select_image = NONE
 
 def pause():
     pass

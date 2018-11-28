@@ -37,10 +37,10 @@ class IdleState:
         tower.image.draw(tower.x, tower.y)
         print(tower.x)
 
-class Bazzi:
+class Dao:
     def __init__(self, x=0, y=0):
         # Tower is only once created, so instance image loading is fine
-        self.image = load_image('Bazzi.png')
+        self.image = load_image('Dao.png')
         self.frame = 0
         self.event_que = []
         self.cur_state = IdleState

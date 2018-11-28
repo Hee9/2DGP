@@ -151,3 +151,11 @@ fabric.properties
 # *.ipr
 
 # End of https://www.gitignore.io/api/python,pycharm
+Drills/Tower Defence/__init__.py
+*.py
+Drills/Tower Defence/ball.py
+*.png
+Drills/Tower Defence/ball.py
+Drills/Tower Defence/ball.py
+Drills/Tower Defence/ball.py
+Drills/Tower Defence/Bazzi_tower.png

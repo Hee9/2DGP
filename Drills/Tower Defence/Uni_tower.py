@@ -52,6 +52,9 @@ class UniTower:
         self.Save_mouseY = [0 for n in range(0, 30)]
         self.Flag_mouse = [False for n in range(0, 30)]
 
+    def get_bb(self):
+        return self.mouseX - 30, self.mouseY - 30, self.mouseX + 30, self.mouseY + 30
+
     def attack_ball(self):
         ball = Ball(self.x, self.y, self.dir * 4)
         game_world.add_object(ball, 1)
@@ -69,6 +72,7 @@ class UniTower:
 
     def draw(self):
         self.cur_state.draw(self)
+        draw_rectangle(*self.get_bb())
 
     def handle_event(self, event):
         pass

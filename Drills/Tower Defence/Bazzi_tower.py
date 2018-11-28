@@ -3,6 +3,8 @@ from pico2d import *
 from ball import Ball
 import game_world
 
+import camp_stage
+
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30cm
 
 # Tower Action Speed
@@ -23,12 +25,13 @@ class IdleState:
 
     @staticmethod
     def exit(tower, event):
-        BazziTower.attack_ball()
+        pass
 
     @staticmethod
     def do(tower):
         tower.frame = (tower.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 1
 
+        tower.attack_ball()
 
     @staticmethod
     def draw(BazziTower):
@@ -49,12 +52,18 @@ class BazziTower:
         self.attack = 10
         self.mouseX, self.mouseY = 0, 0
         self.tower1 = 0
+        self.x, self.y = 0,0
         self.Save_mouseX = [0 for n in range(0, 30)]
         self.Save_mouseY = [0 for n in range(0, 30)]
         self.Flag_mouse = [False for n in range(0, 30)]
+        self.tower_collide_check = False
+
+    def get_bb(self):
+        return self.mouseX - 30, self.mouseY - 30, self.mouseX + 30, self.mouseY + 30
 
     def attack_ball(self):
-        ball = Ball(self.Save_mouseX, self.Save_mouseY, self.dir * 4)
+        ball = Ball(self.Save_mouseX[self.tower1], self.Save_mouseY[self.tower1], self.dir * 3)
+
         game_world.add_object(ball, 1)
 
     def add_event(self, event):
@@ -70,6 +79,7 @@ class BazziTower:
 
     def draw(self):
         self.cur_state.draw(self)
+        draw_rectangle(*self.get_bb())
 
     def handle_event(self, event):
         pass

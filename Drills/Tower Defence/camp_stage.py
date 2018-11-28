@@ -14,31 +14,35 @@ image = None
 ClickBazziImage = None
 Dao = None
 Uni = None
-bazzitower = None
-daotower = None
-unitower = None
+bazzitower = []
+daotower = []
+unitower = []
 enemy = None
 enemies = None
+
 
 MouseCheck = False
 y = 1030
 
 def enter():
-    global image, enemy, enemies
+    global image, enemy, enemies, bgm
     global ClickBazziImage, ClickDaoImage, ClickUniImage
     global bazzitower, daotower, unitower
     image = load_image('camp.png')
+    bgm = load_music('GameStart.ogg')
+    bgm.set_volume(50)
+    bgm.play()
     ClickBazziImage = load_image('bazzi.png')
     ClickDaoImage = load_image('Dao.png')
     ClickUniImage = load_image('Uni.png')
-    bazzitower = BazziTower()
-    daotower = DaoTower()
-    unitower = UniTower()
+    #bazzitower = BazziTower()
+    #daotower = DaoTower()
+    #unitower = UniTower()
     enemy = Enemy()
     enemies = [Enemy() for n in range(100)]
-    game_world.add_object(bazzitower, 1)
-    game_world.add_object(daotower, 1)
-    game_world.add_object(unitower, 1)
+    #game_world.add_object(bazzitower, 1)
+    #game_world.add_object(daotower, 1)
+    #game_world.add_object(unitower, 1)
     for enemy in enemies:
         game_world.add_object(enemy, 1)
 
@@ -51,6 +55,9 @@ def update():
     for game_object in game_world.all_objects():
         game_object.update()
 
+    if collide(bazzitower, daotower):
+        bazzitower.tower_collide_check = True
+
 def draw():
     global image, ClickBazziImage, ClickDaoImage, ClickUniImage
     clear_canvas()
@@ -58,11 +65,29 @@ def draw():
     ClickBazziImage.draw(1124, 550)
     ClickDaoImage.draw(1224, 550)
     ClickUniImage.draw(1324, 550)
+
     for game_object in game_world.all_objects():
         game_object.draw()
     update_canvas()
 
+def collide(a, b):
+    left_a, bottom_a, right_a, top_a = a.get_bb()
+    left_b, bottom_b, right_b, top_b = b.get_bb()
+
+    if left_a > right_b:
+        return False
+    if right_a < left_b:
+        return False
+    if top_a < bottom_b:
+        return False
+    if bottom_a > top_b:
+        return False
+
+    return True
+
 def handle_events():
+    global bazzitower
+
     events = get_events()
     for event in events:
         if event.type == SDL_QUIT:
@@ -74,6 +99,9 @@ def handle_events():
                 bazzitower.mouseX, bazzitower.mouseY = event.x, 1024 - 1 - event.y
             elif daotower.Flag_mouse[daotower.tower1]:
                 daotower.mouseX, daotower.mouseY = event.x, 1024 - 1 - event.y
+            elif unitower.Flag_mouse[unitower.tower1]:
+                unitower.mouseX, unitower.mouseY = event.x, 1024 - 1 - event.y
+
         elif event.type == SDL_MOUSEBUTTONDOWN:
             # BazziTower
             if event.x <= 1150 and event.x >= 1096:

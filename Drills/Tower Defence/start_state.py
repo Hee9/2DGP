@@ -37,7 +37,7 @@ def draw():
     update_canvas()
 
 def handle_events():
-    global mouseX, mouseY, bgm
+    global mouseX, mouseY
     events = get_events()
 
     for event in events:
@@ -51,9 +51,6 @@ def handle_events():
             elif event.type == SDL_MOUSEBUTTONDOWN:
                 print(mouseX, mouseY)
                 if event.x >= 560 and event.x <= 980 and 1024 - 1 - event.y >= 210 and 1024 - 1 - event.y <= 280:
-                    bgm = load_music('GameStart.ogg')
-                    bgm.set_volume(50)
-                    bgm.repeat_play()
                     game_framework.change_state(camp_stage)
 
 def pause():

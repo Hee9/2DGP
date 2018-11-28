@@ -1,6 +1,7 @@
 from pico2d import *
 
 import game_framework
+import game_world
 import random
 import camp_stage
 
@@ -56,6 +57,8 @@ class RunState:
             if enemy.y == 780:
                 enemy.dir = 2
 
+        enemy.life_check()
+
     @staticmethod
     def draw(enemy):
         if enemy.dir == 0:
@@ -79,10 +82,15 @@ class Enemy:
         self.event_que = []
         self.cur_state = RunState
         self.cur_state.enter(self, None)
+        self.hp = 0.5
         camp_stage.Enemy_gap += random.randint(40, 100)
 
     def add_event(self, event):
         self.event_que.insert(0, event)
+
+    def life_check(self):
+        if self.hp <= 0:
+            game_world.remove_object(self)
 
     def update(self):
         self.cur_state.do(self)
