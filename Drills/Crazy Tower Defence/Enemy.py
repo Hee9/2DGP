@@ -91,6 +91,7 @@ class Enemy:
     def life_check(self):
         if self.hp <= 0:
             game_world.remove_object(self)
+            camp_stage.money += 30
 
     def update(self):
         self.cur_state.do(self)
