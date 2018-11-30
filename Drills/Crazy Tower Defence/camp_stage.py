@@ -6,7 +6,8 @@ import game_world
 from Tower_Bazzi import Bazzi
 from Tower_Dao import Dao
 from Tower_Uni import Uni
-from Enemy import Enemy
+from Camp_Enemy_First import Camp_Enemy_First
+from Camp_Enemy_Second import Camp_Enemy_Second
 
 NONE, BAZZI, DAO, UNI = range(4)
 name = "CAMP Stage"
@@ -22,20 +23,26 @@ bazzi_image = None
 dao_image = None
 uni_image = None
 
-enemy = None
-enemies = []
+camp_enemy_first = None
+camp_enemies_first = []
+camp_enemy_second = None
+camp_enemies_second = []
+
 Enemy_gap = 1030
 Enemy_timer = 0
 select_image = NONE
 
-money = 200
+money = 50
 life = 20
 increase_money = 0
+enemy_die_count = 0
 
 def enter():
     global background_image, bgm, font
     global money_image, store_image, money_up_image, life_up_image
     global bazzi_image, dao_image, uni_image
+    global increase_money
+    increase_money = 0.01
 
     background_image = load_image('camp.png')
     money_image = load_image('Money.png')
@@ -62,28 +69,34 @@ def exit():
     game_world.clear()
 
 def update():
-    global Enemy_timer, money, life, increase_money
-    global enemies
+    global Enemy_timer, money, life, increase_money, enemy_die_count
+    global camp_enemies_first, camp_enemy_second
 
     for game_object in game_world.all_objects():
         game_object.update()
 
-    increase_money = 0.01
+    #increase_money = 0.01
     money += increase_money
     Enemy_timer += 1
 
     if Enemy_timer == 50:
-        enemy = Enemy()
-        enemies.append(enemy)
-        game_world.add_object(enemy, 1)
-        Enemy_timer = 0
+        camp_enemy_first = Camp_Enemy_First()
+        camp_enemy_second = Camp_Enemy_Second()
+        if enemy_die_count == 0:
+            camp_enemies_first.append(camp_enemy_first)
+            game_world.add_object(camp_enemy_first, 1)
 
+        elif enemy_die_count == 10:
+            camp_enemies_second.append(camp_enemy_second)
+            game_world.add_object(camp_enemy_second, 1)
+        Enemy_timer = 0
 
 def draw():
     global background_image, font
     global money_image, store_image, money_up_image, life_up_image
     global money, life
     global bazzi_image, dao_image, uni_image
+
     clear_canvas()
     background_image.draw(520, 520)
     money_image.draw(1124, 940)
@@ -104,7 +117,9 @@ def draw():
     font.draw(1200, 680, '50 Won', (255, 255, 0))
     font.draw(1230, 570, 'STORE', (255, 0, 0))
     font.draw(1070, 450, 'MONEY UP', (0, 0, 255))
+    font.draw(1070, 420, '200 Won', (0, 0, 255))
     font.draw(1330, 450, 'LIFE UP', (0, 0, 255))
+    font.draw(1330, 420, '100 Won', (0, 0, 255))
 
     for game_object in game_world.all_objects():
         game_object.draw()
@@ -149,28 +164,40 @@ def handle_events():
                 select_image = Uni
             # Money_UP
             elif event.x <= 1176 and event.x >= 1124 and 1024 - 1 - event.y <= 525 and 1024 - 1 - event.y >= 475:
-                print("COLLIDE")
-                increase_money = 1
+                if money >= 200:
+                    increase_money += 0.01
+                    money -= 200
             # Life_UP
             elif event.x <= 1422 and event.x >= 1378 and 1024 - 1 - event.y <= 525 and 1024 - 1 - event.y >= 475:
-                life += 1
+                if money >= 100:
+                    life += 1
+                    money -= 100
 
         elif event.type == SDL_MOUSEBUTTONUP:
             # BazziTower
             if select_image == BAZZI:
-                bazzi = Bazzi(event.x, 1024 - 1 - event.y)
-                game_world.add_object(bazzi, 1)
-                select_image = NONE
+                if event.x < 1040:
+                    if money >= 20:
+                        bazzi = Bazzi(event.x, 1024 - 1 - event.y)
+                        game_world.add_object(bazzi, 1)
+                        select_image = NONE
+                        money -= 20
             # BazziTower
             elif select_image == Dao:
-                dao = Dao(event.x, 1024 - 1 - event.y)
-                game_world.add_object(dao, 1)
-                select_image = NONE
+                if event.x < 1040:
+                    if money >= 35:
+                        dao = Dao(event.x, 1024 - 1 - event.y)
+                        game_world.add_object(dao, 1)
+                        select_image = NONE
+                        money -= 35
             # BazziTower
             elif select_image == Uni:
-                uni = Uni(event.x, 1024 - 1 - event.y)
-                game_world.add_object(uni, 1)
-                select_image = NONE
+                if event.x < 1040:
+                    if money >= 50:
+                        uni = Uni(event.x, 1024 - 1 - event.y)
+                        game_world.add_object(uni, 1)
+                        select_image = NONE
+                        money -= 50
 
 def pause():
     pass

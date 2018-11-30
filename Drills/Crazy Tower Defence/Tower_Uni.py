@@ -45,7 +45,7 @@ class Uni:
         self.event_que = []
         self.cur_state = IdleState
         self.cur_state.enter(self, None)
-        self.attack = 0.1
+        self.attack = 0.5
         self.x, self.y = x, y
         self.tower_collide_check = False
         self.timer = 0
@@ -77,9 +77,9 @@ class Uni:
         return True
 
     def check_enemy_in_range(self):
-        for enemy in camp_stage.enemies:
-            if self.collide(enemy):
-                self.attack_ball(enemy, self.attack_damage)
+        for camp_enemy_first in camp_stage.camp_enemies_first:
+            if self.collide(camp_enemy_first):
+                self.attack_ball(camp_enemy_first, self.attack_damage)
                 break
 
     def add_event(self, event):

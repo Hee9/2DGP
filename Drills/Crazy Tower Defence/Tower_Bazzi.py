@@ -5,7 +5,7 @@ from pico2d import *
 import camp_stage
 from ball import Ball
 
-PIXEL_PER_METER = (10,0 / 0.3)      # 10 pixel 30cm
+PIXEL_PER_METER = (10.0 / 0.3)      # 10 pixel 30cm
 
 # Tower Action Speed
 TIME_PER_ACTION = 0.5
@@ -77,9 +77,9 @@ class Bazzi:
         return True
 
     def check_enemy_in_range(self):
-        for enemy in camp_stage.enemies:
-            if self.collide(enemy):
-                self.attack_ball(enemy, self.attack_damage)
+        for camp_enemy_first in camp_stage.camp_enemies_first:
+            if self.collide(camp_enemy_first):
+                self.attack_ball(camp_enemy_first, self.attack_damage)
                 break
 
     def add_event(self, event):
