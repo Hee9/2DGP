@@ -5,7 +5,7 @@ from pico2d import *
 import camp_stage
 from ball import Ball
 
-PIXEL_PER_METER = (10,0 / 0.3)      # 10 pixel 30cm
+PIXEL_PER_METER = (10.0 / 0.3)      # 10 pixel 30cm
 
 # Tower Action Speed
 TIME_PER_ACTION = 0.5
@@ -25,7 +25,7 @@ class IdleState:
     @staticmethod
     def do(tower):
         tower.frame = (tower.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 1
-        tower.timer +=1
+        tower.timer += 1
 
         if tower.timer == 100:
             tower.check_enemy_in_range()
@@ -38,6 +38,8 @@ class IdleState:
         print(tower.x)
 
 class Uni:
+    attack_damage = 0.15
+
     def __init__(self, x=0, y=0):
         # Tower is only once created, so instance image loading is fine
         self.image = load_image('Uni.png')
@@ -45,17 +47,15 @@ class Uni:
         self.event_que = []
         self.cur_state = IdleState
         self.cur_state.enter(self, None)
-        self.attack = 0.5
         self.x, self.y = x, y
         self.tower_collide_check = False
         self.timer = 0
-        self.attack_damage = 0.05
 
     def get_bb(self):
         return self.x - 30, self.y - 30, self.x + 30, self.y + 30
 
     def get_range_bb(self):
-        return self.x - 150, self.y - 150, self.x + 150, self.y + 150
+        return self.x - 220, self.y - 220, self.x + 220, self.y + 220
 
     def attack_ball(self, enemy, damage):
         ball = Ball(self.x, self.y, enemy, damage)
@@ -80,6 +80,12 @@ class Uni:
         for camp_enemy_first in camp_stage.camp_enemies_first:
             if self.collide(camp_enemy_first):
                 self.attack_ball(camp_enemy_first, self.attack_damage)
+                break
+
+    def check_enemy_in_range(self):
+        for camp_enemy_second in camp_stage.camp_enemies_second:
+            if self.collide(camp_enemy_second):
+                self.attack_ball(camp_enemy_second, self.attack_damage)
                 break
 
     def add_event(self, event):

@@ -2,6 +2,7 @@ from pico2d import *
 
 import game_framework
 import game_world
+import pause_state
 
 from Tower_Bazzi import Bazzi
 from Tower_Dao import Dao
@@ -14,10 +15,12 @@ name = "CAMP Stage"
 font = None
 
 background_image = None
+pause_image = None
 money_image = None
 store_image = None
 money_up_image = None
 life_up_image = None
+small_power_up_image = None
 
 bazzi_image = None
 dao_image = None
@@ -32,23 +35,24 @@ Enemy_gap = 1030
 Enemy_timer = 0
 select_image = NONE
 
-money = 50
+money = 30
 life = 20
 increase_money = 0
-enemy_die_count = 0
 
 def enter():
-    global background_image, bgm, font
-    global money_image, store_image, money_up_image, life_up_image
+    global background_image, bgm, font, pause_image
+    global money_image, store_image, money_up_image, life_up_image, small_power_up_image
     global bazzi_image, dao_image, uni_image
     global increase_money
     increase_money = 0.01
 
     background_image = load_image('camp.png')
+    pause_image = load_image('pause.png')
     money_image = load_image('Money.png')
     store_image = load_image('Store.png')
     money_up_image = load_image('Money_UP.png')
     life_up_image = load_image('Life_UP.png')
+    small_power_up_image = load_image('Small_Power_UP.png')
 
     bazzi_image = load_image('Bazzi.png')
     dao_image = load_image('Dao.png')
@@ -60,16 +64,17 @@ def enter():
     bgm.play()
 
 def exit():
-    global background_image, bgm, font
-    global money_image, store_image, money_up_image, life_up_image
+    global background_image, bgm, font, pause_image
+    global money_image, store_image, money_up_image, life_up_image, small_power_up_image
     global bazzi_image, dao_image, uni_image
-    del(background_image, bgm, font)
-    del(money_image, store_image, money_up_image, life_up_image)
+    del(background_image, bgm, font, pause_image)
+    del(money_image, store_image, money_up_image, life_up_image, small_power_up_image)
     del(bazzi_image, dao_image, uni_image)
     game_world.clear()
 
 def update():
-    global Enemy_timer, money, life, increase_money, enemy_die_count
+    global Enemy_timer, money, life, increase_money
+    global camp_enemy_first, camp_enemy_second
     global camp_enemies_first, camp_enemy_second
 
     for game_object in game_world.all_objects():
@@ -79,31 +84,39 @@ def update():
     money += increase_money
     Enemy_timer += 1
 
+    #print(Camp_Enemy_First.draw_count)
+
     if Enemy_timer == 50:
         camp_enemy_first = Camp_Enemy_First()
         camp_enemy_second = Camp_Enemy_Second()
-        if enemy_die_count == 0:
+        if Camp_Enemy_First.draw_count < 20:
             camp_enemies_first.append(camp_enemy_first)
             game_world.add_object(camp_enemy_first, 1)
-
-        elif enemy_die_count == 10:
+            Camp_Enemy_First.draw_count += 1
+            print(camp_enemy_first.draw_count)
+        elif Camp_Enemy_First.draw_count < 40:
             camp_enemies_second.append(camp_enemy_second)
             game_world.add_object(camp_enemy_second, 1)
+            Camp_Enemy_First.draw_count += 1
+            Enemy_timer += 1
+            print(camp_enemy_first.draw_count)
         Enemy_timer = 0
 
 def draw():
-    global background_image, font
-    global money_image, store_image, money_up_image, life_up_image
+    global background_image, font, pause_image
+    global money_image, store_image, money_up_image, life_up_image, small_power_up_image
     global money, life
     global bazzi_image, dao_image, uni_image
 
     clear_canvas()
     background_image.draw(520, 520)
+    pause_image.draw(1500, 980)
     money_image.draw(1124, 940)
     store_image.draw(1200, 570)
     store_image.draw(1360, 570)
     money_up_image.draw(1150, 500)
     life_up_image.draw(1400, 500)
+    small_power_up_image.draw(1150, 300)
 
     bazzi_image.draw(1124, 880)
     dao_image.draw(1124, 780)
@@ -119,7 +132,9 @@ def draw():
     font.draw(1070, 450, 'MONEY UP', (0, 0, 255))
     font.draw(1070, 420, '200 Won', (0, 0, 255))
     font.draw(1330, 450, 'LIFE UP', (0, 0, 255))
-    font.draw(1330, 420, '100 Won', (0, 0, 255))
+    font.draw(1330, 420, '300 Won', (0, 0, 255))
+    font.draw(1050, 250, 'SMALL_POWER_UP', (0, 0, 255))
+    font.draw(1050, 220, '100 Won', (0, 0, 255))
 
     for game_object in game_world.all_objects():
         game_object.draw()
@@ -153,6 +168,9 @@ def handle_events():
         elif event.type == SDL_MOUSEMOTION:
             bazzi_image.draw(event.x, 1024-1-event.y)
         elif event.type == SDL_MOUSEBUTTONDOWN:
+            # pause_state
+            if event.x <= 1533 and event.x >= 1467 and 1024 - 1 - event.y <= 1110 and 1024 - 1 - event.y >= 947:
+                game_framework.push_state(pause_state)
             # BazziTower
             if event.x <= 1150 and event.x >= 1096 and 1024 - 1 - event.y <= 906 and 1024 - 1 - event.y >= 854:
                 select_image = BAZZI
@@ -172,6 +190,7 @@ def handle_events():
                 if money >= 100:
                     life += 1
                     money -= 100
+            # Samll_Power_UP
 
         elif event.type == SDL_MOUSEBUTTONUP:
             # BazziTower

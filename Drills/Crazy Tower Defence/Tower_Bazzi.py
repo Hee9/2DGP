@@ -25,7 +25,7 @@ class IdleState:
     @staticmethod
     def do(tower):
         tower.frame = (tower.frame + FRAMES_PER_ACTION * ACTION_PER_TIME * game_framework.frame_time) % 1
-        tower.timer +=1
+        tower.timer += 1
 
         if tower.timer == 100:
             tower.check_enemy_in_range()
@@ -35,9 +35,10 @@ class IdleState:
     def draw(tower):
         #tower.image.clip_draw(int(tower.frame) * 70, 0, 70, 70, tower.x, tower.y)
         tower.image.draw(tower.x, tower.y)
-        print(tower.x)
 
 class Bazzi:
+    attack_damage = 0.05
+
     def __init__(self, x=0, y=0):
         # Tower is only once created, so instance image loading is fine
         self.image = load_image('Bazzi.png')
@@ -45,11 +46,9 @@ class Bazzi:
         self.event_que = []
         self.cur_state = IdleState
         self.cur_state.enter(self, None)
-        self.attack = 0.1
         self.x, self.y = x, y
         self.tower_collide_check = False
         self.timer = 0
-        self.attack_damage = 0.05
 
     def get_bb(self):
         return self.x - 30, self.y - 30, self.x + 30, self.y + 30
@@ -80,6 +79,12 @@ class Bazzi:
         for camp_enemy_first in camp_stage.camp_enemies_first:
             if self.collide(camp_enemy_first):
                 self.attack_ball(camp_enemy_first, self.attack_damage)
+                break
+
+    def check_enemy_in_range(self):
+        for camp_enemy_second in camp_stage.camp_enemies_second:
+            if self.collide(camp_enemy_second):
+                self.attack_ball(camp_enemy_second, self.attack_damage)
                 break
 
     def add_event(self, event):

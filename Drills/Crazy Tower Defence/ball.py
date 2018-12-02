@@ -21,7 +21,7 @@ class Ball:
         return self.x - 10, self.y - 10, self.x + 10, self.y + 10
 
     def move_to_target(self):
-        self.x += self.velocity * math.cos(math.atan2(self.target_enemy.y-self.y,self.target_enemy.x-self.x))
+        self.x += self.velocity * math.cos(math.atan2(self.target_enemy.y-self.y, self.target_enemy.x-self.x))
         self.y += self.velocity * math.sin(math.atan2(self.target_enemy.y - self.y, self.target_enemy.x - self.x))
 
         if self.collide(self.target_enemy):
