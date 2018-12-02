@@ -39,7 +39,7 @@ class IdleState:
         tower.image.draw(tower.x, tower.y)
 
 class Bazzi:
-    attack_damage = 0.05
+    attack_damage = 0.02
 
     def __init__(self, x=0, y=0):
         # Tower is only once created, so instance image loading is fine

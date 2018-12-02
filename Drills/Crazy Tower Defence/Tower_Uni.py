@@ -40,7 +40,7 @@ class IdleState:
         print(tower.x)
 
 class Uni:
-    attack_damage = 0.15
+    attack_damage = 0.1
 
     def __init__(self, x=0, y=0):
         # Tower is only once created, so instance image loading is fine

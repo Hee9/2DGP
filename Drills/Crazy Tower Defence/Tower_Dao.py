@@ -39,7 +39,7 @@ class IdleState:
         print(tower.x)
 
 class Dao:
-    attack_damage = 0.075
+    attack_damage = 0.05
 
     def __init__(self, x=0, y=0):
         # Tower is only once created, so instance image loading is fine
