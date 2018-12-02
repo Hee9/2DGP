@@ -15,6 +15,7 @@ NONE, BAZZI, DAO, UNI = range(4)
 name = "CAMP Stage"
 font = None
 
+camp_image = None
 background_image = None
 pause_image = None
 money_image = None
@@ -48,14 +49,15 @@ life = 20
 increase_money = 0
 
 def enter():
-    global background_image, bgm, font, pause_image, money_image
+    global camp_image, background_image, bgm, font, pause_image, money_image
     global store_image, money_up_image, life_up_image, small_power_up_image, big_power_up_image
     global Click_Bazzi, Click_Dao, Click_Uni
     global bazzi_image, dao_image, uni_image
     global increase_money
     increase_money = 0.01
 
-    background_image = load_image('camp.png')
+    camp_image = load_image('camp.png')
+    background_image = load_image('background.png')
     pause_image = load_image('pause.png')
     money_image = load_image('Money.png')
     store_image = load_image('Store.png')
@@ -78,11 +80,11 @@ def enter():
     bgm.play()
 
 def exit():
-    global background_image, bgm, font, pause_image, money_image
+    global camp_image, background_image, bgm, font, pause_image, money_image
     global store_image, money_up_image, life_up_image, small_power_up_image, big_power_up_image
     global Click_Bazzi, Click_Dao, Click_Uni
     global bazzi_image, dao_image, uni_image
-    del(background_image, bgm, font, pause_image, money_image)
+    del(camp_image, background_image, bgm, font, pause_image, money_image)
     del(store_image, money_up_image, life_up_image, small_power_up_image, big_power_up_image)
     del(Click_Bazzi, Click_Dao, Click_Uni)
     del(bazzi_image, dao_image, uni_image)
@@ -131,7 +133,8 @@ def draw():
     global bazzi_image, dao_image, uni_image
 
     clear_canvas()
-    background_image.draw(520, 520)
+    camp_image.draw(520, 520)
+    background_image.draw(1288, 520)
     pause_image.draw(1500, 980)
     money_image.draw(1124, 940)
     store_image.draw(1200, 570)
@@ -164,10 +167,10 @@ def draw():
     font.draw(1070, 420, '200 Won', (0, 0, 255))
     font.draw(1330, 450, 'LIFE UP', (0, 0, 255))
     font.draw(1330, 420, '300 Won', (0, 0, 255))
-    font.draw(1050, 300, 'SMALL_POWER_UP', (0, 0, 255))
-    font.draw(1050, 270, '100 Won', (0, 0, 255))
-    font.draw(1050, 150, 'BIG_POWER_UP', (0, 0, 255))
-    font.draw(1050, 120, '200 Won', (0, 0, 255))
+    font.draw(1055, 300, 'SMALL_POWER_UP', (0, 0, 255))
+    font.draw(1055, 270, '100 Won', (0, 0, 255))
+    font.draw(1055, 150, 'BIG_POWER_UP', (0, 0, 255))
+    font.draw(1055, 120, '200 Won', (0, 0, 255))
 
     for game_object in game_world.all_objects():
         game_object.draw()
@@ -233,7 +236,16 @@ def handle_events():
             # Uni_Power_UP
             elif event.x <= 1420 and event.x >= 1378 and 1024 - 1 - event.y <= 286 and 1024 - 1 - event.y >= 251:
                 Uni.attack_damage += 0.01
-            print(event.x, 1024 - 1 - event.y)
+            # Big_Power_UP
+            # Bazzi_Power_UP
+            elif event.x <= 1420 and event.x >= 1378 and 1024 - 1 - event.y <= 218 and 1024 - 1 - event.y >= 180:
+                Bazzi.attack_damage += 0.03
+            # Dao_Power_UP
+            elif event.x <= 1420 and event.x >= 1378 and 1024 - 1 - event.y <= 168 and 1024 - 1 - event.y >= 130:
+                Dao.attack_damage += 0.03
+            # Uni_Power_UP
+            elif event.x <= 1420 and event.x >= 1378 and 1024 - 1 - event.y <= 118 and 1024 - 1 - event.y >= 80:
+                Uni.attack_damage += 0.03
 
         elif event.type == SDL_MOUSEBUTTONUP:
             # BazziTower
