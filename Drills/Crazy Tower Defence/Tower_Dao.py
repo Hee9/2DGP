@@ -27,7 +27,9 @@ class IdleState:
         tower.timer += 1
 
         if tower.timer == 100:
-            tower.check_enemy_in_range()
+            tower.check_enemy_first_in_range()
+            tower.check_enemy_second_in_range()
+            tower.check_enemy_boss_in_range()
             tower.timer = 0
 
     @staticmethod
@@ -75,16 +77,22 @@ class Dao:
 
         return True
 
-    def check_enemy_in_range(self):
+    def check_enemy_first_in_range(self):
         for camp_enemy_first in camp_stage.camp_enemies_first:
             if self.collide(camp_enemy_first):
                 self.attack_ball(camp_enemy_first, self.attack_damage)
                 break
 
-    def check_enemy_in_range(self):
+    def check_enemy_second_in_range(self):
         for camp_enemy_second in camp_stage.camp_enemies_second:
             if self.collide(camp_enemy_second):
                 self.attack_ball(camp_enemy_second, self.attack_damage)
+                break
+
+    def check_enemy_boss_in_range(self):
+        for camp_enemy_boss in camp_stage.camp_enemies_boss:
+            if self.collide(camp_enemy_boss):
+                self.attack_ball(camp_enemy_boss, self.attack_damage)
                 break
 
     def add_event(self, event):

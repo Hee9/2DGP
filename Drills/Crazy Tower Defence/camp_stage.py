@@ -9,6 +9,7 @@ from Tower_Dao import Dao
 from Tower_Uni import Uni
 from Camp_Enemy_First import Camp_Enemy_First
 from Camp_Enemy_Second import Camp_Enemy_Second
+from Camp_Enemy_Boss import Camp_Enemy_Boss
 
 NONE, BAZZI, DAO, UNI = range(4)
 name = "CAMP Stage"
@@ -30,6 +31,8 @@ camp_enemy_first = None
 camp_enemies_first = []
 camp_enemy_second = None
 camp_enemies_second = []
+camp_enemy_boss = None
+camp_enemies_boss = []
 
 Enemy_gap = 1030
 Enemy_timer = 0
@@ -74,8 +77,8 @@ def exit():
 
 def update():
     global Enemy_timer, money, life, increase_money
-    global camp_enemy_first, camp_enemy_second
-    global camp_enemies_first, camp_enemy_second
+    global camp_enemy_first, camp_enemy_second, camp_enemy_boss
+    global camp_enemies_first, camp_enemy_second, camp_enemies_boss
 
     for game_object in game_world.all_objects():
         game_object.update()
@@ -89,14 +92,19 @@ def update():
     if Enemy_timer == 50:
         camp_enemy_first = Camp_Enemy_First()
         camp_enemy_second = Camp_Enemy_Second()
-        if Camp_Enemy_First.draw_count < 20:
+        camp_enemy_boss = Camp_Enemy_Boss()
+        if Camp_Enemy_First.draw_count < 15:
             camp_enemies_first.append(camp_enemy_first)
             game_world.add_object(camp_enemy_first, 1)
             Camp_Enemy_First.draw_count += 1
-            print(camp_enemy_first.draw_count)
-        elif Camp_Enemy_First.draw_count < 40:
+        elif Camp_Enemy_First.draw_count < 30:
             camp_enemies_second.append(camp_enemy_second)
             game_world.add_object(camp_enemy_second, 1)
+            Camp_Enemy_First.draw_count += 1
+            Enemy_timer += 1
+        elif Camp_Enemy_First.draw_count < 31:
+            camp_enemies_boss.append(camp_enemy_boss)
+            game_world.add_object(camp_enemy_boss, 1)
             Camp_Enemy_First.draw_count += 1
             Enemy_timer += 1
             print(camp_enemy_first.draw_count)
