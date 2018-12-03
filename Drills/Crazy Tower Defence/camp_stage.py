@@ -4,6 +4,7 @@ import game_framework
 import game_world
 import pause_state
 import game_over_state
+import pirate_stage
 
 from Tower_Bazzi import Bazzi
 from Tower_Dao import Dao
@@ -44,13 +45,14 @@ camp_enemies_boss = []
 Enemy_gap = 1030
 Enemy_timer = 0
 select_image = NONE
+change_stage_check = False
 
 money = 30
 life = 20
 increase_money = 0
 
 def enter():
-    global camp_image, background_image, bgm, font, pause_image, money_image
+    global camp_image, background_image, start_bgm, bgm, font, pause_image, money_image
     global store_image, money_up_image, life_up_image, small_power_up_image, big_power_up_image
     global Click_Bazzi, Click_Dao, Click_Uni
     global bazzi_image, dao_image, uni_image
@@ -76,16 +78,21 @@ def enter():
     uni_image = load_image('uni.png')
 
     font = load_font('ENCR10B.TTF', 32)
-    bgm = load_music('GameStart.ogg')
-    bgm.set_volume(50)
+    start_bgm = load_wav('GameStart.ogg')
+    bgm = load_music('camp_BGM.ogg')
+
+    start_bgm.set_volume(50)
+    start_bgm.play(1)
+
+    bgm.set_volume(30)
     bgm.play()
 
 def exit():
-    global camp_image, background_image, bgm, font, pause_image, money_image
+    global camp_image, background_image, start_bgm, bgm, font, pause_image, money_image
     global store_image, money_up_image, life_up_image, small_power_up_image, big_power_up_image
     global Click_Bazzi, Click_Dao, Click_Uni
     global bazzi_image, dao_image, uni_image
-    del(camp_image, background_image, bgm, font, pause_image, money_image)
+    del(camp_image, background_image, start_bgm, bgm, font, pause_image, money_image)
     del(store_image, money_up_image, life_up_image, small_power_up_image, big_power_up_image)
     del(Click_Bazzi, Click_Dao, Click_Uni)
     del(bazzi_image, dao_image, uni_image)
@@ -124,9 +131,14 @@ def update():
             Camp_Enemy_First.draw_count += 1
             Enemy_timer += 1
         Enemy_timer = 0
+    print(Camp_Enemy_First.die_count)
 
     if life <= 0:
         game_framework.change_state(game_over_state)
+
+    if Camp_Enemy_First.die_count == 30:
+        game_framework.change_state(pirate_stage)
+
 
 def draw():
     global background_image, font, pause_image, money_image
@@ -233,22 +245,28 @@ def handle_events():
             # Bazzi_Power_UP
             elif event.x <= 1420 and event.x >= 1378 and 1024 - 1 - event.y <= 388 and 1024 - 1 - event.y >= 351:
                 Bazzi.attack_damage += 0.01
+                money -= 100
             # Dao_Power_UP
             elif event.x <= 1420 and event.x >= 1378 and 1024 - 1 - event.y <= 336 and 1024 - 1 - event.y >= 301:
                 Dao.attack_damage += 0.01
+                money -= 100
             # Uni_Power_UP
             elif event.x <= 1420 and event.x >= 1378 and 1024 - 1 - event.y <= 286 and 1024 - 1 - event.y >= 251:
                 Uni.attack_damage += 0.01
+                money -= 100
             # Big_Power_UP
             # Bazzi_Power_UP
             elif event.x <= 1420 and event.x >= 1378 and 1024 - 1 - event.y <= 218 and 1024 - 1 - event.y >= 180:
                 Bazzi.attack_damage += 0.03
+                money -= 200
             # Dao_Power_UP
             elif event.x <= 1420 and event.x >= 1378 and 1024 - 1 - event.y <= 168 and 1024 - 1 - event.y >= 130:
                 Dao.attack_damage += 0.03
+                money -= 200
             # Uni_Power_UP
             elif event.x <= 1420 and event.x >= 1378 and 1024 - 1 - event.y <= 118 and 1024 - 1 - event.y >= 80:
                 Uni.attack_damage += 0.03
+                money -= 200
 
         elif event.type == SDL_MOUSEBUTTONUP:
             # BazziTower

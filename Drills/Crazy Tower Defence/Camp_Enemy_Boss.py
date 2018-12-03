@@ -5,6 +5,8 @@ import game_world
 import random
 import camp_stage
 
+from Camp_Enemy_First import Camp_Enemy_First
+
 # Enemy Run Speed
 PIXEL_PER_METER = (10.0 / 0.3)  # 10 pixel 30cm
 RUN_SPEED_KMPH = 20.0 # km / hour
@@ -60,6 +62,7 @@ class RunState:
             camp_stage.camp_enemies_boss.remove(enemy)
             game_world.remove_object(enemy)
             camp_stage.life -= 1
+            Camp_Enemy_First.die_count += 1
 
         enemy.life_check()
 
@@ -105,13 +108,14 @@ class Camp_Enemy_Boss:
             event = self.event_que.pop()
             self.cur_state.exit(self, event)
             self.cur_state.enter(self, event)
+            Camp_Enemy_First.die_count += 1
 
     def get_bb(self):
         return self.x - 50, self.y - 50, self.x + 50, self.y + 50
 
     def draw(self):
         self.cur_state.draw(self)
-        draw_rectangle(*self.get_bb())
+        #draw_rectangle(*self.get_bb())
 
     def handle_event(self, event):
         pass
