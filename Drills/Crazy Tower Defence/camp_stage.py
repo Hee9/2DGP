@@ -3,6 +3,7 @@ from pico2d import *
 import game_framework
 import game_world
 import pause_state
+import game_over_state
 
 from Tower_Bazzi import Bazzi
 from Tower_Dao import Dao
@@ -122,8 +123,10 @@ def update():
             game_world.add_object(camp_enemy_boss, 1)
             Camp_Enemy_First.draw_count += 1
             Enemy_timer += 1
-            print(camp_enemy_first.draw_count)
         Enemy_timer = 0
+
+    if life <= 0:
+        game_framework.change_state(game_over_state)
 
 def draw():
     global background_image, font, pause_image, money_image

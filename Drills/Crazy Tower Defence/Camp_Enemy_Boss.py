@@ -57,6 +57,8 @@ class RunState:
             if enemy.y == 780:
                 enemy.dir = 2
         if enemy.y == 0:
+            camp_stage.camp_enemies_boss.remove(enemy)
+            game_world.remove_object(enemy)
             camp_stage.life -= 1
 
         enemy.life_check()
@@ -84,7 +86,7 @@ class Camp_Enemy_Boss:
         self.event_que = []
         self.cur_state = RunState
         self.cur_state.enter(self, None)
-        self.hp = 1
+        self.hp = 2
 
         camp_stage.Enemy_gap += random.randint(40, 100)
 
@@ -95,7 +97,7 @@ class Camp_Enemy_Boss:
         if self.hp <= 0:
             camp_stage.camp_enemies_boss.remove(self)
             game_world.remove_object(self)
-            camp_stage.money += 5
+            camp_stage.money += 7
 
     def update(self):
         self.cur_state.do(self)
